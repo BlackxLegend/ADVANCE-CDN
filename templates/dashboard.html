@@ -2,39 +2,302 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Kali Security Admin</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <style>
-  body{margin:0;background:#020b14;color:#00ffcc;font-family:monospace}
-  header{padding:14px;text-align:center;font-size:20px;border-bottom:1px solid #00ffcc;box-shadow:0 0 25px #00ffcc22}
-  .wrap{padding:14px}
-  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:14px}
-  .card{border:1px solid #00ffcc;background:#01060c;padding:14px;box-shadow:0 0 28px #00ffcc35}
-  .row{display:flex;justify-content:space-between;gap:10px;padding:5px 0;align-items:center}
-  .label{color:#00ffaa}
-  .bad{color:#ff3366}
-  .good{color:#00ffaa}
-  .muted{color:#7df6e5}
-  button{background:transparent;border:1px solid #00ffcc;color:#00ffcc;padding:8px 10px;cursor:pointer;font-family:monospace;margin-right:8px}
-  button:hover{background:#00ffcc;color:#020b14}
-  .btnrow{margin-top:10px}
-  pre{margin:0;max-height:220px;overflow:auto;padding:10px;background:#020b14;border:1px solid #00ffcc33}
-  .mini{font-size:12px}
-  a{color:#00ffcc}
-  input[type=file], input[type=text], input[type=date], input[type=number]{
-    color:#00ffcc;background:#020b14;border:1px solid #00ffcc33;padding:6px;font-family:monospace;
+:root{
+  --bg:#020b14;
+  --panel:#01060c;
+  --neon:#00ffcc;
+  --neon2:#00ffaa;
+  --muted:#7df6e5;
+  --danger:#ff3366;
+  --warn:#ffaa00;
+  --line:#00ffcc33;
+  --glow:#00ffcc55;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+html, body{
+  height:100%;
+}
+
+body{
+  margin:0;
+  background:radial-gradient(circle at top, #041a28, var(--bg));
+  color:var(--neon);
+  font-family:monospace;
+  overflow-x:hidden;
+}
+
+/* ================= HEADER ================= */
+
+header{
+  position:sticky;
+  top:0;
+  z-index:20;
+  padding:14px 10px;
+  text-align:center;
+  font-size:18px;
+  border-bottom:1px solid var(--neon);
+  box-shadow:0 0 25px var(--line);
+  background:rgba(2,11,20,.85);
+  backdrop-filter: blur(10px);
+  letter-spacing:1px;
+}
+
+/* ================= LAYOUT ================= */
+
+.wrap{
+  padding:18px;
+  max-width:1600px;
+  margin:0 auto;
+}
+
+/* PC FIRST GRID */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0, 1fr));
+  gap:18px;
+  align-items:start;
+}
+
+/* Large monitors */
+@media (min-width:1500px){
+  .grid{
+    grid-template-columns:repeat(4, minmax(0, 1fr));
   }
+}
 
-  #mediaGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:10px}
-  .mediaItem{border:1px solid #00ffcc33;padding:8px;background:#020b14}
-  .mediaItem img{width:100%;border:1px solid #00ffcc22}
-  .fileName{font-size:12px;color:#7df6e5;word-break:break-all;margin-top:6px}
-  .smallBtn{width:100%;margin-top:8px;padding:6px}
-  .chk{transform:scale(1.1)}
+/* Laptop */
+@media (max-width:1200px){
+  .grid{
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+  }
+}
 
-  table{width:100%;border-collapse:collapse}
-  th,td{border:1px solid #00ffcc22;padding:6px;font-size:12px}
-  th{color:#00ffaa}
+/* Mobile fallback */
+@media (max-width:720px){
+  .grid{
+    grid-template-columns:1fr;
+  }
+}
+
+/* ================= CARDS ================= */
+
+.card{
+  background:rgba(1,6,12,.9);
+  border:1px solid var(--neon);
+  border-radius:14px;
+  padding:14px;
+  box-shadow:0 0 26px var(--glow);
+  min-width:0;
+}
+
+/* ================= ROWS ================= */
+
+.row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  padding:6px 0;
+  flex-wrap:wrap;
+}
+
+.label{color:var(--neon2)}
+.good{color:var(--neon2)}
+.bad{color:var(--danger)}
+.muted{color:var(--muted)}
+.mini{font-size:12px}
+
+hr{
+  border:0;
+  border-top:1px solid var(--line);
+  margin:8px 0;
+}
+
+/* ================= BUTTONS ================= */
+
+button{
+  background:transparent;
+  border:1px solid var(--neon);
+  color:var(--neon);
+  padding:10px 12px;
+  font-family:monospace;
+  cursor:pointer;
+  border-radius:10px;
+  transition:0.25s;
+  white-space:nowrap;
+}
+
+button:hover{
+  background:var(--neon);
+  color:var(--bg);
+  box-shadow:0 0 18px rgba(0,255,204,.45);
+}
+
+button:active{
+  transform:scale(.97);
+}
+
+.btnrow{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+
+.btnrow button{
+  flex:1 1 140px;
+}
+
+.smallBtn{
+  width:100%;
+  margin-top:8px;
+  padding:9px;
+}
+
+/* ================= INPUTS ================= */
+
+input[type=file],
+input[type=text],
+input[type=date],
+input[type=number],
+select{
+  width:100%;
+  background:rgba(2,11,20,.85);
+  border:1px solid var(--line);
+  color:var(--neon);
+  padding:9px;
+  font-family:monospace;
+  border-radius:10px;
+}
+
+input:focus,
+select:focus{
+  outline:none;
+  border-color:rgba(0,255,204,.6);
+  box-shadow:0 0 14px rgba(0,255,204,.25);
+}
+
+/* ================= CHART ================= */
+
+canvas{
+  width:100% !important;
+  display:block;
+}
+
+#graph{
+  height:260px !important;
+}
+
+/* ================= TABLE ================= */
+
+.tableWrap{
+  max-height:420px;
+  overflow:auto;
+  border-radius:10px;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+th, td{
+  border:1px solid rgba(0,255,204,.14);
+  padding:8px;
+  font-size:12px;
+  vertical-align:top;
+  word-break:break-word;
+}
+
+th{
+  color:var(--neon2);
+  background:rgba(0,255,204,.06);
+}
+
+/* ================= MEDIA GRID ================= */
+
+#mediaGrid{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0, 1fr));
+  gap:12px;
+  margin-top:10px;
+}
+
+@media (min-width:1200px){
+  #mediaGrid{
+    grid-template-columns:repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (min-width:1500px){
+  #mediaGrid{
+    grid-template-columns:repeat(5, minmax(0, 1fr));
+  }
+}
+
+@media (max-width:720px){
+  #mediaGrid{
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+  }
+}
+
+.mediaItem{
+  background:rgba(2,11,20,.7);
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:10px;
+  transition:.2s;
+}
+
+.mediaItem:hover{
+  transform:translateY(-2px);
+  border-color:rgba(0,255,204,.55);
+  box-shadow:0 0 18px rgba(0,255,204,.25);
+}
+
+.mediaItem img{
+  width:100%;
+  display:block;
+  border-radius:8px;
+  border:1px solid rgba(0,255,204,.2);
+}
+
+.fileName{
+  font-size:12px;
+  color:var(--muted);
+  margin-top:6px;
+  word-break:break-all;
+}
+
+.chk{
+  transform:scale(1.1);
+}
+
+/* ================= SCROLLBAR ================= */
+
+::-webkit-scrollbar{
+  width:10px;
+  height:10px;
+}
+
+::-webkit-scrollbar-thumb{
+  background:rgba(0,255,204,.2);
+  border-radius:20px;
+}
+
+::-webkit-scrollbar-track{
+  background:rgba(2,11,20,.6);
+}
+
 </style>
 </head>
 
@@ -52,7 +315,7 @@
       <div class="row"><span class="label">iptables DROPs</span><span id="drops">-</span></div>
       <div class="row"><span class="label">SSH fails</span><span id="fails">-</span></div>
 
-      <hr style="border-color:#00ffcc33">
+      <hr>
       <div class="row"><span class="label">Upload speed</span><span id="upSpd">-</span></div>
       <div class="row"><span class="label">Download speed</span><span id="dnSpd">-</span></div>
       <div class="row"><span class="label">Bandwidth total</span><span id="bwt">-</span></div>
@@ -61,18 +324,18 @@
       <div class="row"><span class="label">Media folder</span><span id="mediaSize">-</span></div>
       <div class="row"><span class="label">Total images / videos</span><span id="imgVid">-</span></div>
 
-      <hr style="border-color:#00ffcc33">
+      <hr>
       <div class="row"><span class="label">Tier A ≤50MB</span><span id="tierA">-</span></div>
       <div class="row"><span class="label">Tier B 50–100MB</span><span id="tierB">-</span></div>
       <div class="row"><span class="label">Tier C 100–200MB</span><span id="tierC">-</span></div>
       <div class="row"><span class="label">Storage left</span><span id="leftMB">-</span></div>
 
-      <hr style="border-color:#00ffcc33">
+      <hr>
       <div class="row"><span class="label">Total Upload</span><span id="upTotal">-</span></div>
       <div class="row"><span class="label">Total Download</span><span id="downTotal">-</span></div>
       <div class="row"><span class="label">Top viewed file</span><span id="topViewed">-</span></div>
 
-      <hr style="border-color:#00ffcc33">
+      <hr>
       <div class="row"><span class="label">DDoS</span><span id="ddos" class="good">-</span></div>
       <div class="row"><span class="label">Mitigation</span><span id="mit" class="good">-</span></div>
       <div class="row"><span class="label">Reason</span><span id="reason" class="muted">-</span></div>
@@ -91,7 +354,7 @@
 
     <div class="card">
       <div class="row"><span class="label">Expiring files</span><span class="mini muted">auto-delete list</span></div>
-      <div style="overflow:auto;max-height:340px">
+      <div class="tableWrap">
         <table>
           <thead>
             <tr>
@@ -108,7 +371,7 @@
       <div class="mini">IPv4 Base: <span class="muted">{{ v4 }}</span></div>
       <div class="mini">IPv6 Base: <span class="muted">{{ v6 }}</span></div>
 
-      <hr style="border-color:#00ffcc33">
+      <hr>
 
       <input id="file" type="file">
       <div class="mini muted" id="fileHint" style="margin-top:8px"></div>
@@ -127,48 +390,48 @@
         <span class="mini muted" id="mediaCount">0 files</span>
       </div>
 
-      <div class="row" style="flex-wrap:wrap">
+      <div class="row" style="gap:10px">
         <input id="q" type="text" placeholder="Search name..." style="flex:1;min-width:140px">
-        <select id="kind" style="background:#020b14;color:#00ffcc;border:1px solid #00ffcc33;padding:6px;font-family:monospace">
+        <select id="kind" style="min-width:130px">
           <option value="">All</option>
           <option value="image">Images</option>
           <option value="video">Videos</option>
         </select>
       </div>
 
-      <div class="row" style="flex-wrap:wrap">
-        <span class="mini muted">From</span><input id="df" type="date">
-        <span class="mini muted">To</span><input id="dt" type="date">
+      <div class="row" style="gap:10px">
+        <span class="mini muted">From</span><input id="df" type="date" style="flex:1;min-width:140px">
+        <span class="mini muted">To</span><input id="dt" type="date" style="flex:1;min-width:140px">
       </div>
 
-      <div class="row" style="flex-wrap:wrap">
+      <div class="row" style="gap:10px">
         <span class="mini muted">Sort</span>
-        <select id="sort" style="background:#020b14;color:#00ffcc;border:1px solid #00ffcc33;padding:6px;font-family:monospace">
+        <select id="sort" style="flex:1;min-width:140px">
           <option value="mtime">Date</option>
           <option value="name">Name</option>
           <option value="size">Size</option>
           <option value="views">Views</option>
           <option value="delete_at">Delete at</option>
         </select>
-        <select id="order" style="background:#020b14;color:#00ffcc;border:1px solid #00ffcc33;padding:6px;font-family:monospace">
+        <select id="order" style="min-width:110px">
           <option value="desc">Desc</option>
           <option value="asc">Asc</option>
         </select>
-        <button onclick="applyFilters()">Apply</button>
+        <button onclick="applyFilters()" style="flex:1;min-width:120px">Apply</button>
       </div>
 
       <div class="row">
-        <div class="mini muted">
+        <div class="mini muted" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
           <button onclick="prevPage()">Prev</button>
           <button onclick="nextPage()">Next</button>
           <span id="pageInfo"></span>
         </div>
       </div>
 
-      <div class="row" style="flex-wrap:wrap">
-        <button onclick="deleteSelected()">Delete Selected</button>
+      <div class="row" style="gap:10px">
+        <button onclick="deleteSelected()" style="flex:1;min-width:160px">Delete Selected</button>
         <span class="mini muted">Auto delete selected in (hours):</span>
-        <input id="hoursDel" type="number" min="1" value="24" style="width:80px">
+        <input id="hoursDel" type="number" min="1" value="24" style="width:90px">
         <button onclick="scheduleSelected()">Set</button>
         <button onclick="cancelScheduleSelected()">Cancel</button>
       </div>
@@ -191,10 +454,24 @@ const graphChart = new Chart(document.getElementById("graph"), {
       { label: "CONN", data: [], borderColor: "#ff3366", tension: 0.25 },
     ]
   },
-  options: { animation:false, plugins:{legend:{labels:{color:"#00ffcc"}}}, scales:{x:{display:false}, y:{ticks:{color:"#00ffcc"}}} }
+  options: { animation:false, responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{labels:{color:"#00ffcc"}}},
+    scales:{x:{display:false}, y:{ticks:{color:"#00ffcc"}}}
+  }
 });
 
-function setText(id, text){ document.getElementById(id).textContent = text; }
+const lastText = new Map();
+function setText(id, text){
+  const el = document.getElementById(id);
+  if(!el) return;
+  if(lastText.get(id) !== text){
+    el.textContent = text;
+    el.classList.remove("pop");
+    void el.offsetWidth;
+    el.classList.add("pop");
+    lastText.set(id, text);
+  }
+}
 
 async function refresh(){
   const res = await fetch("/api/stats");
@@ -231,9 +508,11 @@ async function refresh(){
   const ddosEl = document.getElementById("ddos");
   ddosEl.textContent = d.ddos ? "ACTIVE" : "NORMAL";
   ddosEl.className = d.ddos ? "bad" : "good";
+
   const mitEl = document.getElementById("mit");
   mitEl.textContent = d.mitigation ? "ON" : "OFF";
   mitEl.className = d.mitigation ? "bad" : "good";
+
   setText("reason", d.reason || "N/A");
 
   graphChart.data.datasets[0].data = d.graph.cpu;
@@ -242,7 +521,6 @@ async function refresh(){
   graphChart.data.datasets[3].data = d.graph.conn;
   graphChart.update();
 
-  // Expiring table
   const tbody = document.getElementById("expTable");
   tbody.innerHTML = "";
   (d.expiring || []).forEach(x=>{
@@ -259,7 +537,6 @@ async function refresh(){
   });
 }
 
-// Upload helpers
 document.getElementById("file").addEventListener("change", ()=>{
   const f = document.getElementById("file").files[0];
   const hint = document.getElementById("fileHint");
@@ -296,7 +573,6 @@ async function upload(){
   await refresh();
 }
 
-// Gallery filters/paging
 let mediaOffset = 0, mediaLimit = 30, mediaTotal = 0;
 let currentFilters = {};
 
@@ -359,7 +635,6 @@ async function refreshMedia(){
 
     const delInfo = it.delete_at ? `Auto delete: ${new Date(it.delete_at*1000).toLocaleString()}` : "Auto delete: none";
     const upInfo = it.uploaded_at ? `Uploaded: ${new Date(it.uploaded_at*1000).toLocaleString()}` : `MTime: ${new Date(it.mtime*1000).toLocaleString()}`;
-
     const lock = it.locked_delete ? true : false;
 
     wrap.innerHTML = `
