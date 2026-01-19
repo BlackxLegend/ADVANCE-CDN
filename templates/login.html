@@ -3,46 +3,184 @@
 <head>
 <meta charset="UTF-8" />
 <title>Admin Login</title>
+
 <style>
-  body{
-    margin:0;height:100vh;display:flex;align-items:center;justify-content:center;
-    background:#020b14;color:#00ffcc;font-family:monospace;
-  }
-  .card{
-    width:340px;border:1px solid #00ffcc;padding:18px;
-    box-shadow:0 0 30px #00ffcc55;background:#01060c;
-  }
-  h2{margin:0 0 10px 0;color:#00ffaa}
-  input,button{
-    width:100%;padding:10px;margin-top:10px;
-    background:#020b14;color:#00ffcc;border:1px solid #00ffcc;
-    font-family:monospace;
-  }
-  button:hover{background:#00ffcc;color:#020b14;cursor:pointer}
-  #msg{margin-top:10px;color:#ff3366;min-height:18px}
+:root{
+  --neon:#00ffcc;
+  --neon-soft:#00ffcc55;
+  --bg:#020b14;
+  --panel:#01060c;
+  --error:#ff3366;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:radial-gradient(circle at top, #041422, #020b14);
+  font-family:monospace;
+  color:var(--neon);
+  overflow:hidden;
+}
+
+/* floating background glow */
+body::before{
+  content:"";
+  position:absolute;
+  inset:-50%;
+  background:conic-gradient(
+    from 0deg,
+    transparent,
+    var(--neon-soft),
+    transparent
+  );
+  animation:spin 18s linear infinite;
+  opacity:.25;
+}
+
+.card{
+  position:relative;
+  width:340px;
+  padding:22px;
+  background:var(--panel);
+  border:1px solid var(--neon);
+  box-shadow:0 0 40px var(--neon-soft);
+  animation:enter .8s ease-out;
+}
+
+/* animated border glow */
+.card::before{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  border:2px solid var(--neon);
+  filter:blur(6px);
+  opacity:.6;
+  animation:pulse 2.5s infinite;
+  pointer-events:none;
+}
+
+h2{
+  margin:0 0 12px;
+  color:#00ffaa;
+  letter-spacing:1px;
+}
+
+input,button{
+  width:100%;
+  padding:12px;
+  margin-top:12px;
+  background:var(--bg);
+  color:var(--neon);
+  border:1px solid var(--neon);
+  font-family:monospace;
+  transition:.25s;
+}
+
+input:focus{
+  outline:none;
+  box-shadow:0 0 15px var(--neon-soft);
+}
+
+button{
+  position:relative;
+  overflow:hidden;
+  cursor:pointer;
+}
+
+button:hover{
+  background:var(--neon);
+  color:#020b14;
+  box-shadow:0 0 25px var(--neon);
+}
+
+button:active{
+  transform:scale(.97);
+}
+
+/* ripple */
+button::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle, #ffffff55 10%, transparent 60%);
+  opacity:0;
+  transition:.4s;
+}
+button:active::after{opacity:1}
+
+#msg{
+  margin-top:12px;
+  min-height:18px;
+  color:var(--error);
+  animation:none;
+}
+
+/* shake on error */
+.shake{
+  animation:shake .35s;
+}
+
+/* animations */
+@keyframes enter{
+  from{opacity:0;transform:scale(.85)}
+  to{opacity:1;transform:scale(1)}
+}
+@keyframes pulse{
+  0%,100%{opacity:.3}
+  50%{opacity:.8}
+}
+@keyframes shake{
+  0%{transform:translateX(0)}
+  25%{transform:translateX(-6px)}
+  50%{transform:translateX(6px)}
+  75%{transform:translateX(-4px)}
+  100%{transform:translateX(0)}
+}
+@keyframes spin{
+  to{transform:rotate(360deg)}
+}
 </style>
 </head>
+
 <body>
-  <div class="card">
-    <h2>Admin Login</h2>
-    <input id="pw" type="password" placeholder="Password" />
-    <button onclick="login()">Login</button>
-    <div id="msg"></div>
-  </div>
+
+<div class="card" id="card">
+  <h2>Admin Login</h2>
+  <input id="pw" type="password" placeholder="Password" />
+  <button onclick="login()">Login</button>
+  <div id="msg"></div>
+</div>
 
 <script>
 async function login(){
   const pw = document.getElementById("pw").value;
+  const msg = document.getElementById("msg");
+  const card = document.getElementById("card");
+
+  msg.textContent = "";
+  card.classList.remove("shake");
+
   const form = new FormData();
   form.append("password", pw);
 
-  const res = await fetch("/login", { method:"POST", body: form });
-  if(res.ok){
-    location.href="/dashboard";
-  } else {
-    document.getElementById("msg").textContent = "Wrong password";
+  try{
+    const res = await fetch("/login", { method:"POST", body:form });
+    if(res.ok){
+      location.href="/dashboard";
+    }else{
+      throw new Error();
+    }
+  }catch{
+    msg.textContent = "Wrong password";
+    card.classList.add("shake");
   }
 }
 </script>
+
 </body>
 </html>
