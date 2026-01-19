@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Admin Login</title>
+<style>
+  body{
+    margin:0;height:100vh;display:flex;align-items:center;justify-content:center;
+    background:#020b14;color:#00ffcc;font-family:monospace;
+  }
+  .card{
+    width:340px;border:1px solid #00ffcc;padding:18px;
+    box-shadow:0 0 30px #00ffcc55;background:#01060c;
+  }
+  h2{margin:0 0 10px 0;color:#00ffaa}
+  input,button{
+    width:100%;padding:10px;margin-top:10px;
+    background:#020b14;color:#00ffcc;border:1px solid #00ffcc;
+    font-family:monospace;
+  }
+  button:hover{background:#00ffcc;color:#020b14;cursor:pointer}
+  #msg{margin-top:10px;color:#ff3366;min-height:18px}
+</style>
+</head>
+<body>
+  <div class="card">
+    <h2>Admin Login</h2>
+    <input id="pw" type="password" placeholder="Password" />
+    <button onclick="login()">Login</button>
+    <div id="msg"></div>
+  </div>
+
+<script>
+async function login(){
+  const pw = document.getElementById("pw").value;
+  const form = new FormData();
+  form.append("password", pw);
+
+  const res = await fetch("/login", { method:"POST", body: form });
+  if(res.ok){
+    location.href="/dashboard";
+  } else {
+    document.getElementById("msg").textContent = "Wrong password";
+  }
+}
+</script>
+</body>
+</html>

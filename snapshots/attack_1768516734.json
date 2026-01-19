@@ -1,0 +1,13 @@
+{
+  "time": 1768516734.014376,
+  "reason": "CPU exhaustion",
+  "cpu": 0.0,
+  "ram": 70.5,
+  "rps": 1.0,
+  "connections_established": 9,
+  "iptables_drops": 0,
+  "auth_failures": 0,
+  "top_attackers": {
+    "192.168.0.219": 282
+  }
+}

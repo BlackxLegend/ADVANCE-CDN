@@ -1,0 +1,19 @@
+{
+  "time": 1768520568.2801223,
+  "reason": "High RPS",
+  "cpu": 45.6,
+  "ram": 67.1,
+  "rps": 40.2,
+  "connections_established": 18,
+  "iptables_drops": 0,
+  "auth_failures": 0,
+  "top_attackers": [
+    {
+      "ip": "192.168.0.219",
+      "count": 201,
+      "country": "UN"
+    }
+  ],
+  "total_upload_bytes": 0,
+  "total_download_bytes": 0
+}

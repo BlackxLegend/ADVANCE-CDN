@@ -1,0 +1,112 @@
+{
+  "server": {
+    "host": "0.0.0.0",
+    "port": 5000,
+    "metrics_interval_seconds": 1.0,
+    "health_path": "/api/health"
+  },
+  "admin": {
+    "password": "admin123",
+    "two_step_enabled": false,
+    "pin": "0000",
+    "session_timeout_minutes": 30,
+    "lockout_max_attempts": 5,
+    "lockout_window_seconds": 300,
+    "lockout_seconds": 600
+  },
+  "upload": {
+    "max_image_mb": 24,
+    "allowed_image_ext": [
+      "jpg",
+      "jpeg",
+      "png",
+      "gif",
+      "webp",
+      "bmp"
+    ],
+    "allowed_video_ext": [
+      "mp4",
+      "webm",
+      "mkv",
+      "mov",
+      "avi"
+    ],
+    "dedupe_enabled": true,
+    "dedupe_hash_algo": "sha256",
+    "rename_on_conflict": true
+  },
+  "storage": {
+    "media_limit_gb": 8.0,
+    "warn_percent": 80,
+    "block_percent": 95,
+    "auto_clean_enabled": true,
+    "auto_clean_keep_days": 30,
+    "auto_clean_target_percent": 85,
+    "auto_clean_only_when_blocked": true
+  },
+  "video_policy": {
+    "tierA": {
+      "max_mb": 50,
+      "ttl_days": 30,
+      "max_files": 60,
+      "max_active": 60
+    },
+    "tierB": {
+      "max_mb": 100,
+      "ttl_days": 15,
+      "max_files": 40,
+      "max_active": 40
+    },
+    "tierC": {
+      "max_mb": 200,
+      "ttl_hours": 42,
+      "max_files": 20,
+      "agree_required": true,
+      "max_active": 20
+    },
+    "tierC_agree_text": "Allow 100\u2013200MB video (auto-delete 42h)"
+  },
+  "autodelete": {
+    "scheduler_enabled": true,
+    "check_interval_seconds": 15,
+    "lock_cancel_for_tier_videos": true,
+    "allow_earlier_delete_for_tier_videos": true,
+    "allow_extend_for_tier_videos": false,
+    "enabled": true
+  },
+  "access_control": {
+    "private_files_enabled": true,
+    "signed_urls_enabled": true,
+    "signing_secret": "CHANGE_SIGNING_SECRET",
+    "default_private": false,
+    "token_header": "X-Media-Token"
+  },
+  "rate_limit": {
+    "enabled": true,
+    "window_seconds": 10,
+    "max_requests_per_window": 200,
+    "media_max_requests_per_window": 120,
+    "temp_ban_enabled": true,
+    "temp_ban_seconds": 300,
+    "ban_threshold_multiplier": 1.5
+  },
+  "bandwidth_limit": {
+    "enabled": true,
+    "max_concurrent_downloads": 10,
+    "per_connection_kbps": 0
+  },
+  "ddos": {
+    "enabled": true,
+    "rps_threshold": 40,
+    "conn_threshold": 150,
+    "cpu_threshold": 90,
+    "recovery_delay_seconds": 15,
+    "mitigation_delay_seconds": 0.06
+  },
+  "analytics": {
+    "enabled": true,
+    "ip_hash_salt": "CHANGE_ANALYTICS_SALT",
+    "top_n": 10,
+    "max_unique_store_per_file_day": 5000
+  }
+}
