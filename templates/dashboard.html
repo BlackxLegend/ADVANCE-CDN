@@ -1,771 +1,155 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Kali Security Admin</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<style>
-:root{
-  --bg:#020b14;
-  --panel:#01060c;
-  --neon:#00ffcc;
-  --neon2:#00ffaa;
-  --muted:#7df6e5;
-  --danger:#ff3366;
-  --warn:#ffaa00;
-  --line:#00ffcc33;
-  --glow:#00ffcc55;
-}
-
-*{
-  box-sizing:border-box;
-}
-
-html, body{
-  height:100%;
-}
-
-body{
-  margin:0;
-  background:radial-gradient(circle at top, #041a28, var(--bg));
-  color:var(--neon);
-  font-family:monospace;
-  overflow-x:hidden;
-}
-
-/* ================= HEADER ================= */
-
-header{
-  position:sticky;
-  top:0;
-  z-index:20;
-  padding:14px 10px;
-  text-align:center;
-  font-size:18px;
-  border-bottom:1px solid var(--neon);
-  box-shadow:0 0 25px var(--line);
-  background:rgba(2,11,20,.85);
-  backdrop-filter: blur(10px);
-  letter-spacing:1px;
-}
-
-/* ================= LAYOUT ================= */
-
-.wrap{
-  padding:18px;
-  max-width:1600px;
-  margin:0 auto;
-}
-
-/* PC FIRST GRID */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(3, minmax(0, 1fr));
-  gap:18px;
-  align-items:start;
-}
-
-/* Large monitors */
-@media (min-width:1500px){
-  .grid{
-    grid-template-columns:repeat(4, minmax(0, 1fr));
-  }
-}
-
-/* Laptop */
-@media (max-width:1200px){
-  .grid{
-    grid-template-columns:repeat(2, minmax(0, 1fr));
-  }
-}
-
-/* Mobile fallback */
-@media (max-width:720px){
-  .grid{
-    grid-template-columns:1fr;
-  }
-}
-
-/* ================= CARDS ================= */
-
-.card{
-  background:rgba(1,6,12,.9);
-  border:1px solid var(--neon);
-  border-radius:14px;
-  padding:14px;
-  box-shadow:0 0 26px var(--glow);
-  min-width:0;
-}
-
-/* ================= ROWS ================= */
-
-.row{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  padding:6px 0;
-  flex-wrap:wrap;
-}
-
-.label{color:var(--neon2)}
-.good{color:var(--neon2)}
-.bad{color:var(--danger)}
-.muted{color:var(--muted)}
-.mini{font-size:12px}
-
-hr{
-  border:0;
-  border-top:1px solid var(--line);
-  margin:8px 0;
-}
-
-/* ================= BUTTONS ================= */
-
-button{
-  background:transparent;
-  border:1px solid var(--neon);
-  color:var(--neon);
-  padding:10px 12px;
-  font-family:monospace;
-  cursor:pointer;
-  border-radius:10px;
-  transition:0.25s;
-  white-space:nowrap;
-}
-
-button:hover{
-  background:var(--neon);
-  color:var(--bg);
-  box-shadow:0 0 18px rgba(0,255,204,.45);
-}
-
-button:active{
-  transform:scale(.97);
-}
-
-.btnrow{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-top:10px;
-}
-
-.btnrow button{
-  flex:1 1 140px;
-}
-
-.smallBtn{
-  width:100%;
-  margin-top:8px;
-  padding:9px;
-}
-
-/* ================= INPUTS ================= */
-
-input[type=file],
-input[type=text],
-input[type=date],
-input[type=number],
-select{
-  width:100%;
-  background:rgba(2,11,20,.85);
-  border:1px solid var(--line);
-  color:var(--neon);
-  padding:9px;
-  font-family:monospace;
-  border-radius:10px;
-}
-
-input:focus,
-select:focus{
-  outline:none;
-  border-color:rgba(0,255,204,.6);
-  box-shadow:0 0 14px rgba(0,255,204,.25);
-}
-
-/* ================= CHART ================= */
-
-canvas{
-  width:100% !important;
-  display:block;
-}
-
-#graph{
-  height:260px !important;
-}
-
-/* ================= TABLE ================= */
-
-.tableWrap{
-  max-height:420px;
-  overflow:auto;
-  border-radius:10px;
-}
-
-table{
-  width:100%;
-  border-collapse:collapse;
-}
-
-th, td{
-  border:1px solid rgba(0,255,204,.14);
-  padding:8px;
-  font-size:12px;
-  vertical-align:top;
-  word-break:break-word;
-}
-
-th{
-  color:var(--neon2);
-  background:rgba(0,255,204,.06);
-}
-
-/* ================= MEDIA GRID ================= */
-
-#mediaGrid{
-  display:grid;
-  grid-template-columns:repeat(3, minmax(0, 1fr));
-  gap:12px;
-  margin-top:10px;
-}
-
-@media (min-width:1200px){
-  #mediaGrid{
-    grid-template-columns:repeat(4, minmax(0, 1fr));
-  }
-}
-
-@media (min-width:1500px){
-  #mediaGrid{
-    grid-template-columns:repeat(5, minmax(0, 1fr));
-  }
-}
-
-@media (max-width:720px){
-  #mediaGrid{
-    grid-template-columns:repeat(2, minmax(0, 1fr));
-  }
-}
-
-.mediaItem{
-  background:rgba(2,11,20,.7);
-  border:1px solid var(--line);
-  border-radius:12px;
-  padding:10px;
-  transition:.2s;
-}
-
-.mediaItem:hover{
-  transform:translateY(-2px);
-  border-color:rgba(0,255,204,.55);
-  box-shadow:0 0 18px rgba(0,255,204,.25);
-}
-
-.mediaItem img{
-  width:100%;
-  display:block;
-  border-radius:8px;
-  border:1px solid rgba(0,255,204,.2);
-}
-
-.fileName{
-  font-size:12px;
-  color:var(--muted);
-  margin-top:6px;
-  word-break:break-all;
-}
-
-.chk{
-  transform:scale(1.1);
-}
-
-/* ================= SCROLLBAR ================= */
-
-::-webkit-scrollbar{
-  width:10px;
-  height:10px;
-}
-
-::-webkit-scrollbar-thumb{
-  background:rgba(0,255,204,.2);
-  border-radius:20px;
-}
-
-::-webkit-scrollbar-track{
-  background:rgba(2,11,20,.6);
-}
-
-</style>
+  <meta charset="utf-8">
+  <title>CDN Dashboard</title>
+  <style>
+    body{margin:0;background:#020b14;color:#00ffcc;font-family:monospace}
+    .top{padding:14px 18px;border-bottom:1px solid #00ffcc33;display:flex;justify-content:space-between;align-items:center}
+    .wrap{display:grid;grid-template-columns:320px 1fr 420px;gap:14px;padding:14px}
+    .card{border:1px solid #00ffcc;padding:14px;background:#01060c;box-shadow:0 0 22px #00ffcc22;border-radius:10px}
+    h3{margin:0 0 10px 0;color:#00ffaa}
+    .row{display:flex;justify-content:space-between;margin:6px 0}
+    table{width:100%;border-collapse:collapse;font-size:13px}
+    th,td{border-bottom:1px solid #00ffcc22;padding:6px;text-align:left}
+    .btn{display:inline-block;padding:8px 10px;border:1px solid #00ffcc;background:#020b14;color:#00ffcc;text-decoration:none;border-radius:8px}
+    .btn:hover{background:#00ffcc;color:#020b14}
+    input[type="file"]{width:100%}
+    small{color:#00ffccaa}
+  </style>
 </head>
-
 <body>
-<header>⚡ KALI REAL-TIME SECURITY ADMIN PANEL ⚡</header>
-
-<div class="wrap">
-  <div class="grid">
-
-    <div class="card">
-      <div class="row"><span class="label">CPU</span><span id="cpu">-</span></div>
-      <div class="row"><span class="label">RAM</span><span id="ram">-</span></div>
-      <div class="row"><span class="label">RPS</span><span id="rps">-</span></div>
-      <div class="row"><span class="label">Connections</span><span id="conn">-</span></div>
-      <div class="row"><span class="label">iptables DROPs</span><span id="drops">-</span></div>
-      <div class="row"><span class="label">SSH fails</span><span id="fails">-</span></div>
-
-      <hr>
-      <div class="row"><span class="label">Upload speed</span><span id="upSpd">-</span></div>
-      <div class="row"><span class="label">Download speed</span><span id="dnSpd">-</span></div>
-      <div class="row"><span class="label">Bandwidth total</span><span id="bwt">-</span></div>
-
-      <div class="row"><span class="label">Disk used</span><span id="disk">-</span></div>
-      <div class="row"><span class="label">Media folder</span><span id="mediaSize">-</span></div>
-      <div class="row"><span class="label">Total images / videos</span><span id="imgVid">-</span></div>
-
-      <hr>
-      <div class="row"><span class="label">Tier A ≤50MB</span><span id="tierA">-</span></div>
-      <div class="row"><span class="label">Tier B 50–100MB</span><span id="tierB">-</span></div>
-      <div class="row"><span class="label">Tier C 100–200MB</span><span id="tierC">-</span></div>
-      <div class="row"><span class="label">Storage left</span><span id="leftMB">-</span></div>
-
-      <hr>
-      <div class="row"><span class="label">Total Upload</span><span id="upTotal">-</span></div>
-      <div class="row"><span class="label">Total Download</span><span id="downTotal">-</span></div>
-      <div class="row"><span class="label">Top viewed file</span><span id="topViewed">-</span></div>
-
-      <hr>
-      <div class="row"><span class="label">DDoS</span><span id="ddos" class="good">-</span></div>
-      <div class="row"><span class="label">Mitigation</span><span id="mit" class="good">-</span></div>
-      <div class="row"><span class="label">Reason</span><span id="reason" class="muted">-</span></div>
-
-      <div class="btnrow">
-        <button onclick="downloadJSON()">Export JSON</button>
-        <button onclick="downloadCSV()">Export CSV</button>
-        <button onclick="location.href='/logout'">Logout</button>
-      </div>
+  <div class="top">
+    <div>⚡ KALI REAL-TIME SECURITY ADMIN PANEL ⚡</div>
+    <div>
+      <a class="btn" href="/logout">Logout</a>
     </div>
-
-    <div class="card">
-      <div class="row"><span class="label">Graphs</span><span class="mini muted">CPU / RAM / RPS / CONN</span></div>
-      <canvas id="graph" height="150"></canvas>
-    </div>
-
-    <div class="card">
-      <div class="row"><span class="label">Expiring files</span><span class="mini muted">auto-delete list</span></div>
-      <div class="tableWrap">
-        <table>
-          <thead>
-            <tr>
-              <th>File</th><th>Tier</th><th>Size</th><th>Uploaded</th><th>Delete</th><th>Left</th>
-            </tr>
-          </thead>
-          <tbody id="expTable"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="row"><span class="label">Media Upload</span><span class="mini muted">img ≤24MB, video tiers</span></div>
-      <div class="mini">IPv4 Base: <span class="muted">{{ v4 }}</span></div>
-      <div class="mini">IPv6 Base: <span class="muted">{{ v6 }}</span></div>
-
-      <hr>
-
-      <input id="file" type="file">
-      <div class="mini muted" id="fileHint" style="margin-top:8px"></div>
-
-      <div class="mini muted" style="margin-top:8px">
-        <label><input type="checkbox" id="agreeAuto" /> Allow 100–200MB video (auto-delete 42h)</label>
-      </div>
-
-      <button onclick="upload()">Upload</button>
-      <div class="mini" id="uploadMsg" style="margin-top:8px"></div>
-    </div>
-
-    <div class="card">
-      <div class="row">
-        <span class="label">Media Gallery</span>
-        <span class="mini muted" id="mediaCount">0 files</span>
-      </div>
-
-      <div class="row" style="gap:10px">
-        <input id="q" type="text" placeholder="Search name..." style="flex:1;min-width:140px">
-        <select id="kind" style="min-width:130px">
-          <option value="">All</option>
-          <option value="image">Images</option>
-          <option value="video">Videos</option>
-        </select>
-      </div>
-
-      <div class="row" style="gap:10px">
-        <span class="mini muted">From</span><input id="df" type="date" style="flex:1;min-width:140px">
-        <span class="mini muted">To</span><input id="dt" type="date" style="flex:1;min-width:140px">
-      </div>
-
-      <div class="row" style="gap:10px">
-        <span class="mini muted">Sort</span>
-        <select id="sort" style="flex:1;min-width:140px">
-          <option value="mtime">Date</option>
-          <option value="name">Name</option>
-          <option value="size">Size</option>
-          <option value="views">Views</option>
-          <option value="delete_at">Delete at</option>
-        </select>
-        <select id="order" style="min-width:110px">
-          <option value="desc">Desc</option>
-          <option value="asc">Asc</option>
-        </select>
-        <button onclick="applyFilters()" style="flex:1;min-width:120px">Apply</button>
-      </div>
-
-      <div class="row">
-        <div class="mini muted" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
-          <button onclick="prevPage()">Prev</button>
-          <button onclick="nextPage()">Next</button>
-          <span id="pageInfo"></span>
-        </div>
-      </div>
-
-      <div class="row" style="gap:10px">
-        <button onclick="deleteSelected()" style="flex:1;min-width:160px">Delete Selected</button>
-        <span class="mini muted">Auto delete selected in (hours):</span>
-        <input id="hoursDel" type="number" min="1" value="24" style="width:90px">
-        <button onclick="scheduleSelected()">Set</button>
-        <button onclick="cancelScheduleSelected()">Cancel</button>
-      </div>
-
-      <div id="mediaGrid"></div>
-    </div>
-
   </div>
-</div>
+
+  <div class="wrap">
+    <div class="card">
+      <h3>System</h3>
+      <div class="row"><span>CPU</span><span id="cpu">-</span></div>
+      <div class="row"><span>RAM</span><span id="ram">-</span></div>
+      <div class="row"><span>RPS</span><span id="rps">-</span></div>
+      <div class="row"><span>Connections</span><span id="conns">-</span></div>
+      <div class="row"><span>iptables DROPs</span><span id="drops">0</span></div>
+      <div class="row"><span>SSH fails</span><span id="ssh">0</span></div>
+      <hr style="border:0;border-top:1px solid #00ffcc22;margin:10px 0">
+      <div class="row"><span>Upload speed</span><span id="us">0 Mbps</span></div>
+      <div class="row"><span>Download speed</span><span id="ds">0 Mbps</span></div>
+      <div class="row"><span>Bandwidth total</span><span id="bw">0 GB</span></div>
+      <div class="row"><span>Disk used</span><span id="disk">-</span></div>
+      <div class="row"><span>Media folder</span><span id="media_mb">-</span></div>
+      <div class="row"><span>Total images / videos</span><span id="counts">-</span></div>
+      <hr style="border:0;border-top:1px solid #00ffcc22;margin:10px 0">
+      <div class="row"><span>Top viewed file</span><span id="top">-</span></div>
+    </div>
+
+    <div class="card">
+      <h3>Expiring files</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>File</th><th>Tier</th><th>Size</th><th>Uploaded</th><th>Delete</th><th>Left</th>
+          </tr>
+        </thead>
+        <tbody id="files"></tbody>
+      </table>
+      <small>Auto-deletes based on tier TTL.</small>
+    </div>
+
+    <div class="card">
+      <h3>Media Upload</h3>
+      <div class="row"><span>Base</span><span id="base">-</span></div>
+      <form id="upform">
+        <input type="file" name="file" required>
+        <label style="display:block;margin-top:10px">
+          <input type="checkbox" name="allow_big" value="1">
+          Allow 100–200MB video (auto-delete 42h)
+        </label>
+        <button class="btn" style="margin-top:10px" type="submit">Upload</button>
+      </form>
+      <div id="upmsg" style="margin-top:10px;min-height:18px;color:#00ffaa"></div>
+      <hr style="border:0;border-top:1px solid #00ffcc22;margin:10px 0">
+      <small>Uploaded files become public at <b>/media/&lt;filename&gt;</b></small>
+    </div>
+  </div>
 
 <script>
-const graphChart = new Chart(document.getElementById("graph"), {
-  type: "line",
-  data: {
-    labels: Array(120).fill(""),
-    datasets: [
-      { label: "CPU", data: [], borderColor: "#00ffcc", tension: 0.25 },
-      { label: "RAM", data: [], borderColor: "#00ffaa", tension: 0.25 },
-      { label: "RPS", data: [], borderColor: "#ffaa00", tension: 0.25 },
-      { label: "CONN", data: [], borderColor: "#ff3366", tension: 0.25 },
-    ]
-  },
-  options: { animation:false, responsive:true, maintainAspectRatio:false,
-    plugins:{legend:{labels:{color:"#00ffcc"}}},
-    scales:{x:{display:false}, y:{ticks:{color:"#00ffcc"}}}
-  }
-});
+async function refreshStats(){
+  const r = await fetch("/api/stats");
+  if(!r.ok) return;
+  const s = await r.json();
 
-const lastText = new Map();
-function setText(id, text){
-  const el = document.getElementById(id);
-  if(!el) return;
-  if(lastText.get(id) !== text){
-    el.textContent = text;
-    el.classList.remove("pop");
-    void el.offsetWidth;
-    el.classList.add("pop");
-    lastText.set(id, text);
-  }
+  document.getElementById("cpu").textContent = s.cpu.toFixed(1) + "%";
+  document.getElementById("ram").textContent = s.ram.toFixed(1) + "%";
+  document.getElementById("rps").textContent = s.rps;
+  document.getElementById("conns").textContent = s.connections;
+  document.getElementById("drops").textContent = s.iptables_drops;
+  document.getElementById("ssh").textContent = s.ssh_fails;
+
+  document.getElementById("us").textContent = (s.upload_speed_mbps || 0) + " Mbps";
+  document.getElementById("ds").textContent = (s.download_speed_mbps || 0) + " Mbps";
+  document.getElementById("bw").textContent = (s.bandwidth_total_gb || 0) + " GB";
+
+  const du = (s.disk_used_gb ?? 0);
+  const dt = (s.disk_total_gb ?? 0);
+  document.getElementById("disk").textContent = du + "/" + dt + " GB";
+  document.getElementById("media_mb").textContent = (s.media_folder_mb ?? 0) + " MB";
+  document.getElementById("counts").textContent = (s.total_images ?? 0) + " / " + (s.total_videos ?? 0);
+
+  document.getElementById("top").textContent = s.top_viewed_file ? (s.top_viewed_file + " (" + s.top_viewed_count + ")") : "-";
+  document.getElementById("base").textContent = s.media_base;
 }
 
-async function refresh(){
-  const res = await fetch("/api/stats");
-  const d = await res.json();
-  if(d.error){ location.href="/login-page"; return; }
-
-  setText("cpu", (d.cpu ?? 0).toFixed(1) + "%");
-  setText("ram", (d.ram ?? 0).toFixed(1) + "%");
-  setText("rps", d.rps);
-  setText("conn", d.connections);
-  setText("drops", d.drops);
-  setText("fails", d.auth_failures);
-
-  setText("upSpd", d.net_up_mbps + " Mbps");
-  setText("dnSpd", d.net_down_mbps + " Mbps");
-  setText("bwt", d.bandwidth_total_gb + " GB");
-
-  setText("disk", d.disk_used_gb + "/" + d.disk_total_gb + " GB (" + d.disk_used_percent + "%)");
-  setText("mediaSize", d.media_size_label);
-  setText("imgVid", d.media_images + " / " + d.media_videos);
-
-  setText("tierA", `${d.tierA_used} used • ${d.tierA_left} left • TTL ${d.tierA_ttl_days}d`);
-  setText("tierB", `${d.tierB_used} used • ${d.tierB_left} left • TTL ${d.tierB_ttl_days}d`);
-  setText("tierC", `${d.tierC_used} used • ${d.tierC_left} left • TTL ${d.tierC_ttl_hours}h`);
-
-  setText("leftMB", `${d.storage_left_mb} MB left (limit ${d.storage_limit_gb}GB)`);
-  setText("upTotal", d.total_upload_mb + " MB");
-  setText("downTotal", d.total_download_mb + " MB");
-
-  if(d.top_viewed && d.top_viewed.name){
-    setText("topViewed", d.top_viewed.name + " (" + d.top_viewed.views + ")");
-  } else setText("topViewed","N/A");
-
-  const ddosEl = document.getElementById("ddos");
-  ddosEl.textContent = d.ddos ? "ACTIVE" : "NORMAL";
-  ddosEl.className = d.ddos ? "bad" : "good";
-
-  const mitEl = document.getElementById("mit");
-  mitEl.textContent = d.mitigation ? "ON" : "OFF";
-  mitEl.className = d.mitigation ? "bad" : "good";
-
-  setText("reason", d.reason || "N/A");
-
-  graphChart.data.datasets[0].data = d.graph.cpu;
-  graphChart.data.datasets[1].data = d.graph.ram;
-  graphChart.data.datasets[2].data = d.graph.rps;
-  graphChart.data.datasets[3].data = d.graph.conn;
-  graphChart.update();
-
-  const tbody = document.getElementById("expTable");
-  tbody.innerHTML = "";
-  (d.expiring || []).forEach(x=>{
+async function refreshFiles(){
+  const r = await fetch("/api/files");
+  if(!r.ok) return;
+  const files = await r.json();
+  const tb = document.getElementById("files");
+  tb.innerHTML = "";
+  for(const f of files){
     const tr = document.createElement("tr");
     tr.innerHTML = `
-      <td>${x.name}</td>
-      <td>${x.tier || ""}</td>
-      <td>${x.size_mb} MB</td>
-      <td>${x.uploaded_at_str}</td>
-      <td>${x.delete_at_str}</td>
-      <td>${x.left_str}</td>
+      <td><a href="${f.url}" target="_blank" style="color:#00ffcc">${f.original}</a></td>
+      <td>${f.tier}</td>
+      <td>${f.size_mb} MB</td>
+      <td>${new Date(f.uploaded_at).toLocaleString()}</td>
+      <td>${new Date(f.delete_at).toLocaleString()}</td>
+      <td>${f.left_h}h</td>
     `;
-    tbody.appendChild(tr);
-  });
+    tb.appendChild(tr);
+  }
 }
 
-document.getElementById("file").addEventListener("change", ()=>{
-  const f = document.getElementById("file").files[0];
-  const hint = document.getElementById("fileHint");
-  document.getElementById("agreeAuto").checked = false;
-  if(!f){ hint.textContent=""; return; }
-  const mb = f.size / (1024*1024);
-  if(f.type.startsWith("image/")){
-    hint.textContent = `Image: ${mb.toFixed(2)} MB (limit 24MB)`;
+document.getElementById("upform").addEventListener("submit", async (e)=>{
+  e.preventDefault();
+  const form = e.target;
+  const fd = new FormData(form);
+
+  // allow_big checkbox -> send allow_big=1 when checked
+  const allow = form.querySelector('input[name="allow_big"]').checked;
+  if(allow) fd.set("allow_big", "1");
+
+  const r = await fetch("/media", { method:"POST", body: fd });
+  const out = await r.json().catch(()=>({ok:false,error:"Upload failed"}));
+
+  const msg = document.getElementById("upmsg");
+  if(out.ok){
+    msg.textContent = `Uploaded: ${out.stored} | Tier ${out.tier} | URL: ${out.url}`;
+    form.reset();
+    refreshFiles();
+    refreshStats();
   } else {
-    hint.textContent = `Video: ${mb.toFixed(2)} MB — <=50MB(30d/60), 50-100MB(15d/40), 100-200MB(42h/20 + agree)`;
+    msg.textContent = out.error || "Upload error";
   }
 });
 
-async function upload(){
-  const f = document.getElementById("file").files[0];
-  const msg = document.getElementById("uploadMsg");
-  msg.textContent = "";
-  if(!f){ msg.textContent = "Select a file first"; return; }
-
-  const form = new FormData();
-  form.append("file", f);
-  form.append("agree_autodelete", document.getElementById("agreeAuto").checked ? "1":"0");
-
-  const res = await fetch("/api/upload", { method:"POST", body: form });
-  const data = await res.json().catch(()=>({}));
-
-  if(!res.ok){
-    msg.textContent = "Upload failed: " + (data.detail || data.error || "unknown");
-    return;
-  }
-
-  msg.textContent = `Uploaded ${data.filename} (${data.size_mb} MB) Tier ${data.tier || ""}`;
-  await refreshMedia();
-  await refresh();
-}
-
-let mediaOffset = 0, mediaLimit = 30, mediaTotal = 0;
-let currentFilters = {};
-
-function updatePageInfo(){
-  const start = mediaTotal === 0 ? 0 : mediaOffset + 1;
-  const end = Math.min(mediaOffset + mediaLimit, mediaTotal);
-  document.getElementById("pageInfo").textContent = `${start}-${end} / ${mediaTotal}`;
-}
-
-function buildListUrl(){
-  const p = new URLSearchParams();
-  p.set("offset", mediaOffset);
-  p.set("limit", mediaLimit);
-  if(currentFilters.q) p.set("q", currentFilters.q);
-  if(currentFilters.kind) p.set("kind", currentFilters.kind);
-  if(currentFilters.df) p.set("date_from", currentFilters.df);
-  if(currentFilters.dt) p.set("date_to", currentFilters.dt);
-  if(currentFilters.sort) p.set("sort", currentFilters.sort);
-  if(currentFilters.order) p.set("order", currentFilters.order);
-  return "/api/media/list?" + p.toString();
-}
-
-function applyFilters(){
-  currentFilters = {
-    q: document.getElementById("q").value.trim(),
-    kind: document.getElementById("kind").value,
-    df: document.getElementById("df").value,
-    dt: document.getElementById("dt").value,
-    sort: document.getElementById("sort").value,
-    order: document.getElementById("order").value,
-  };
-  mediaOffset = 0;
-  refreshMedia();
-}
-
-async function refreshMedia(){
-  const res = await fetch(buildListUrl());
-  const data = await res.json();
-  if(!res.ok) return;
-
-  mediaTotal = data.total || 0;
-  document.getElementById("mediaCount").textContent = `${mediaTotal} files`;
-  updatePageInfo();
-
-  const grid = document.getElementById("mediaGrid");
-  grid.innerHTML = "";
-
-  for(const it of (data.items || [])){
-    const wrap = document.createElement("div");
-    wrap.className = "mediaItem";
-
-    let preview = "";
-    if(it.kind === "image"){
-      preview = `<a href="${it.url}" target="_blank"><img loading="lazy" src="${it.url}" alt=""></a>`;
-    } else if(it.kind === "video"){
-      preview = `<a href="${it.url}" target="_blank">Open video</a>`;
-    } else {
-      preview = `<a href="${it.url}" target="_blank">Open file</a>`;
-    }
-
-    const delInfo = it.delete_at ? `Auto delete: ${new Date(it.delete_at*1000).toLocaleString()}` : "Auto delete: none";
-    const upInfo = it.uploaded_at ? `Uploaded: ${new Date(it.uploaded_at*1000).toLocaleString()}` : `MTime: ${new Date(it.mtime*1000).toLocaleString()}`;
-    const lock = it.locked_delete ? true : false;
-
-    wrap.innerHTML = `
-      <div class="row" style="justify-content:flex-start;gap:10px">
-        <input class="chk" type="checkbox" data-name="${it.name}">
-        <span class="mini muted">${it.kind} • ${Math.round(it.size/1024/1024)}MB • views:${it.views} • tier:${it.tier || "-"}</span>
-      </div>
-      ${preview}
-      <div class="fileName">${it.name}</div>
-      <div class="mini muted">${upInfo}</div>
-      <div class="mini muted">${delInfo}</div>
-
-      <button class="smallBtn" onclick="delOne('${it.name.replace(/'/g,"\\'")}')">Delete</button>
-      <button class="smallBtn" onclick="scheduleOnePrompt('${it.name.replace(/'/g,"\\'")}')">Set Auto Delete</button>
-      ${lock ? `<div class="mini muted">Auto delete locked (tier rule)</div>` : `<button class="smallBtn" onclick="cancelOne('${it.name.replace(/'/g,"\\'")}')">Cancel Auto Delete</button>`}
-    `;
-    grid.appendChild(wrap);
-  }
-}
-
-async function delOne(name){
-  if(!confirm("Delete: " + name + " ?")) return;
-  const res = await fetch("/api/media/delete", {
-    method:"POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({name})
-  });
-  if(res.ok){ await refreshMedia(); await refresh(); }
-  else alert("Delete failed");
-}
-
-async function scheduleOnePrompt(name){
-  const h = prompt("Delete after how many hours? (example: 24)", "24");
-  if(!h) return;
-  const hours = parseInt(h, 10);
-  if(isNaN(hours) || hours < 1) return alert("Invalid hours");
-  const delete_ts = Math.floor(Date.now()/1000) + (hours * 3600);
-
-  const res = await fetch("/api/media/schedule-delete", {
-    method:"POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({name, delete_ts})
-  });
-  const data = await res.json().catch(()=>({}));
-  if(res.ok){ await refreshMedia(); await refresh(); }
-  else alert("Schedule failed: " + (data.detail || data.error || "unknown"));
-}
-
-async function cancelOne(name){
-  const res = await fetch("/api/media/schedule-delete", {
-    method:"POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({name, delete_ts: 0})
-  });
-  const data = await res.json().catch(()=>({}));
-  if(res.ok){ await refreshMedia(); await refresh(); }
-  else alert("Cancel failed: " + (data.detail || data.error || "unknown"));
-}
-
-async function deleteSelected(){
-  const checks = Array.from(document.querySelectorAll('.chk')).filter(c=>c.checked);
-  if(checks.length === 0) return alert("Select files first");
-  const names = checks.map(c=>c.getAttribute("data-name"));
-  if(!confirm(`Delete ${names.length} files?`)) return;
-
-  const res = await fetch("/api/media/delete-bulk", {
-    method:"POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({names})
-  });
-  if(res.ok){ await refreshMedia(); await refresh(); }
-  else alert("Bulk delete failed");
-}
-
-async function scheduleSelected(){
-  const checks = Array.from(document.querySelectorAll('.chk')).filter(c=>c.checked);
-  if(checks.length === 0) return alert("Select files first");
-  const hours = parseInt(document.getElementById("hoursDel").value, 10);
-  if(isNaN(hours) || hours < 1) return alert("Invalid hours");
-  const delete_ts = Math.floor(Date.now()/1000) + (hours * 3600);
-
-  for(const c of checks){
-    const name = c.getAttribute("data-name");
-    await fetch("/api/media/schedule-delete", {
-      method:"POST",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({name, delete_ts})
-    });
-  }
-  await refreshMedia(); await refresh();
-}
-
-async function cancelScheduleSelected(){
-  const checks = Array.from(document.querySelectorAll('.chk')).filter(c=>c.checked);
-  if(checks.length === 0) return alert("Select files first");
-  for(const c of checks){
-    const name = c.getAttribute("data-name");
-    await fetch("/api/media/schedule-delete", {
-      method:"POST",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({name, delete_ts: 0})
-    });
-  }
-  await refreshMedia(); await refresh();
-}
-
-function nextPage(){
-  if(mediaOffset + mediaLimit < mediaTotal){
-    mediaOffset += mediaLimit;
-    refreshMedia();
-  }
-}
-function prevPage(){
-  mediaOffset = Math.max(0, mediaOffset - mediaLimit);
-  refreshMedia();
-}
-
-async function downloadJSON(){
-  const res = await fetch("/api/export/json");
-  const data = await res.json();
-  const blob = new Blob([JSON.stringify(data,null,2)], {type:"application/json"});
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "attackers.json";
-  a.click();
-}
-function downloadCSV(){ window.location.href = "/api/export/csv"; }
-
-refresh();
-setInterval(refresh, 1000);
-applyFilters();
+refreshStats();
+refreshFiles();
+setInterval(refreshStats, 2000);
+setInterval(refreshFiles, 5000);
 </script>
 </body>
 </html>
