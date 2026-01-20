@@ -1096,5 +1096,5 @@ threading.Thread(target=delete_scheduler_loop, daemon=True).start()
 # RUN
 # =========================
 if __name__ == "__main__":
-    print(f"Open: http://{local_ip(False)}:{PORT}/")
-    app.run(host=HOST, port=PORT, debug=False)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
